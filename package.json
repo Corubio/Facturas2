@@ -1,0 +1,22 @@
+{
+  "name": "tarea2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "axios": "^1.8.3",
+    "fp-ts": "^2.16.9",
+    "typescript": "^5.8.2"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.4",
+    "@types/node": "^22.13.10",
+    "prettier": "3.5.3"
+  }
+}
