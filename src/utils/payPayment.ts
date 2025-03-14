@@ -19,10 +19,10 @@ const payPayment =
 
                 return response.data as SuccessResponse;
             },
-            (error) =>
-                new ErrorPayingPayment(
-                    `No se pudo pagar el pago ${payment.id}: ${String(error)}`,
-                ),
+            (error) => ({
+                _type: "ErrorPayingPayment" as const,
+                message: `No se pudo pagar el pago ${payment.id}: ${String(error)}`,
+            }),
         );
 
 export default payPayment;

@@ -6,6 +6,12 @@ import {
     Invoice as InvoiceV2,
     PaymentSettings as PaymentSettingsV2,
 } from "../interface/v2";
+import * as A from "fp-ts/Array";
+import { Payment } from "../interface/v2";
+import * as S from "fp-ts/string";
+import * as N from "fp-ts/number";
+import { pipe } from "fp-ts/function";
+import * as Ord from "fp-ts/Ord";
 
 export const adjustInvoiceAmountV1 =
     (invoice: InvoiceV1) =>
@@ -25,6 +31,20 @@ export const adjustInvoiceAmountV1 =
         };
     };
 
+const byAmount = pipe(
+    N.Ord,
+    Ord.contramap((payment: Payment) => payment.amountCLP),
+);
+
+const byName = pipe(
+    S.Ord,
+    Ord.contramap((payment: Payment) => payment.id),
+    Ord.reverse,
+);
+
+const sortPayments = (payments: Payment[]): Payment[] =>
+    pipe(payments, A.sortBy([byAmount, byName]));
+
 export const adjustInvoiceAmountV2 =
     (invoice: InvoiceV2) =>
     (paymentSettings: PaymentSettingsV2): InvoiceV2 => {
@@ -37,38 +57,34 @@ export const adjustInvoiceAmountV2 =
             0,
         );
 
-        const newPayments = invoice.payments
-            .sort(
-                (a, b) => a.amountCLP - b.amountCLP || b.id.localeCompare(a.id),
-            )
-            .map((payment) => {
-                let adjustedAmountCLP = payment.amountCLP;
-                let adjustedAmountUSD = payment.amountUSD;
+        const newPayments = sortPayments(invoice.payments).map((payment) => {
+            let adjustedAmountCLP = payment.amountCLP;
+            let adjustedAmountUSD = payment.amountUSD;
 
-                if (creditNotesAmountCLP > 0) {
-                    const deductionCLP = Math.min(
-                        creditNotesAmountCLP,
-                        payment.amountCLP,
-                    );
-                    const deductionUSD = Math.min(
-                        creditNotesAmountUSD,
-                        payment.amountUSD,
-                    );
+            if (creditNotesAmountCLP > 0) {
+                const deductionCLP = Math.min(
+                    creditNotesAmountCLP,
+                    payment.amountCLP,
+                );
+                const deductionUSD = Math.min(
+                    creditNotesAmountUSD,
+                    payment.amountUSD,
+                );
 
-                    adjustedAmountCLP -= deductionCLP;
-                    adjustedAmountUSD -= deductionUSD;
+                adjustedAmountCLP -= deductionCLP;
+                adjustedAmountUSD -= deductionUSD;
 
-                    creditNotesAmountCLP -= deductionCLP;
-                    creditNotesAmountUSD -= deductionUSD;
-                }
+                creditNotesAmountCLP -= deductionCLP;
+                creditNotesAmountUSD -= deductionUSD;
+            }
 
-                const newPayment = {
-                    ...payment,
-                    amountCLP: adjustedAmountCLP,
-                    amountUSD: adjustedAmountUSD,
-                };
-                return newPayment;
-            });
+            const newPayment = {
+                ...payment,
+                amountCLP: adjustedAmountCLP,
+                amountUSD: adjustedAmountUSD,
+            };
+            return newPayment;
+        });
 
         return {
             ...invoice,

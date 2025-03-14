@@ -16,10 +16,10 @@ export const fetchInvoicesV1 = (): TE.TaskEither<
             );
             return response.data as InvoiceDataV1[];
         },
-        (error) =>
-            new ErrorFetchingInvoices(
-                `No se pudo obtener las facturas pendientes: ${String(error)}`,
-            ),
+        (error) => ({
+            _type: "ErrorFetchingInvoices" as const,
+            message: `No se pudo obtener las facturas pendientes: ${String(error)}`,
+        }),
     );
 
 export const fetchInvoicesV2 = (): TE.TaskEither<
@@ -33,8 +33,8 @@ export const fetchInvoicesV2 = (): TE.TaskEither<
             );
             return response.data as InvoiceDataV2[];
         },
-        (error) =>
-            new ErrorFetchingInvoices(
-                `No se pudo obtener las facturas pendientes: ${String(error)}`,
-            ),
+        (error) => ({
+            _type: "ErrorFetchingInvoices" as const,
+            message: `No se pudo obtener las facturas pendientes: ${String(error)}`,
+        }),
     );

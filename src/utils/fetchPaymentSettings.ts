@@ -14,10 +14,10 @@ const fetchPaymentSettings = (
             );
             return response.data as PaymentSettings;
         },
-        (error) =>
-            new ErrorFetchingPaymentSettings(
-                `No se pudo obtener los datos de la organización: ${String(error)}`,
-            ),
+        (error) => ({
+            _type: "ErrorFetchingPaymentSettings" as const,
+            message: `No se pudo obtener los datos de la organización: ${String(error)}`,
+        }),
     );
 
 export default fetchPaymentSettings;

@@ -63,21 +63,19 @@ export const processInvoicesV2 = (data: InvoiceDataV2[]): InvoiceV2[] => {
             currency: invoice.currency,
             organizationId: invoice.organization_id,
             payments:
-                payments
-                    ?.map((payment) => ({
-                        id: payment.id,
-                        amountUSD:
-                            invoice.currency === "USD"
-                                ? payment.amount
-                                : payment.amount / 800,
-                        amountCLP:
-                            invoice.currency === "CLP"
-                                ? payment.amount
-                                : payment.amount * 800,
-                        amount: payment.amount,
-                        status: payment.status,
-                    }))
-                    .sort((a, b) => b.amountCLP - a.amountCLP) || [],
+                payments?.map((payment) => ({
+                    id: payment.id,
+                    amountUSD:
+                        invoice.currency === "USD"
+                            ? payment.amount
+                            : payment.amount / 800,
+                    amountCLP:
+                        invoice.currency === "CLP"
+                            ? payment.amount
+                            : payment.amount * 800,
+                    amount: payment.amount,
+                    status: payment.status,
+                })) || [],
             creditNotes: notes.map((note) => ({
                 id: note.id,
                 amountUSD:

@@ -20,10 +20,10 @@ const payInvoice = (
 
             return response.data as SuccessResponse;
         },
-        (error) =>
-            new ErrorPayingInvoice(
-                `No se pudo pagar la factura: ${String(error)}`,
-            ),
+        (error) => ({
+            _type: "ErrorPayingInvoice" as const,
+            message: `No se pudo pagar la factura: ${String(error)}`,
+        }),
     );
 
 export default payInvoice;

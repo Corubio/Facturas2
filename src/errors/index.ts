@@ -1,23 +1,19 @@
-export class ErrorFetchingInvoices extends Error {
-    constructor(message: string) {
-        super(message);
-    }
-}
+export type ErrorFetchingInvoices = {
+    _type: "ErrorFetchingInvoices";
+    message: string;
+};
 
-export class ErrorFetchingPaymentSettings extends Error {
-    constructor(message: string) {
-        super(message);
-    }
-}
+export type ErrorFetchingPaymentSettings = {
+    _type: "ErrorFetchingPaymentSettings";
+    message: string;
+};
 
-export class ErrorPayingInvoice extends Error {
-    constructor(message: string) {
-        super(message);
-    }
-}
+export type ErrorPayingInvoice = {
+    _type: "ErrorPayingInvoice";
+    message: string;
+};
 
-export class ErrorPayingPayment extends Error {
-    constructor(message: string) {
-        super(message);
-    }
-}
+export type ErrorPayingPayment = {
+    _type: "ErrorPayingPayment";
+    message: string;
+};
