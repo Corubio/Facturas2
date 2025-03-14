@@ -3,8 +3,12 @@ import * as TE from "fp-ts/TaskEither";
 import API_BASE_URL from "./apiBaseUrl";
 import { InvoiceData as InvoiceDataV1 } from "../interface/v1";
 import { InvoiceData as InvoiceDataV2 } from "../interface/v2";
+import { ErrorFetchingInvoices } from "../errors";
 
-export const fetchInvoicesV1 = (): TE.TaskEither<Error, InvoiceDataV1[]> =>
+export const fetchInvoicesV1 = (): TE.TaskEither<
+    ErrorFetchingInvoices,
+    InvoiceDataV1[]
+> =>
     TE.tryCatch(
         async () => {
             const response = await axios.get(
@@ -13,12 +17,15 @@ export const fetchInvoicesV1 = (): TE.TaskEither<Error, InvoiceDataV1[]> =>
             return response.data as InvoiceDataV1[];
         },
         (error) =>
-            new Error(
+            new ErrorFetchingInvoices(
                 `No se pudo obtener las facturas pendientes: ${String(error)}`,
             ),
     );
 
-export const fetchInvoicesV2 = (): TE.TaskEither<Error, InvoiceDataV2[]> =>
+export const fetchInvoicesV2 = (): TE.TaskEither<
+    ErrorFetchingInvoices,
+    InvoiceDataV2[]
+> =>
     TE.tryCatch(
         async () => {
             const response = await axios.get(
@@ -27,7 +34,7 @@ export const fetchInvoicesV2 = (): TE.TaskEither<Error, InvoiceDataV2[]> =>
             return response.data as InvoiceDataV2[];
         },
         (error) =>
-            new Error(
+            new ErrorFetchingInvoices(
                 `No se pudo obtener las facturas pendientes: ${String(error)}`,
             ),
     );
